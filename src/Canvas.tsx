@@ -1,6 +1,11 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
-const Canvas = () => {
+type CanvasProps = React.DetailedHTMLProps<
+  React.CanvasHTMLAttributes<HTMLCanvasElement>,
+  HTMLCanvasElement
+> & { draw: (context: CanvasRenderingContext2D) => void };
+
+const Canvas: React.FC<CanvasProps> = ({ draw, ...props }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   console.log(canvasRef);
@@ -17,12 +22,31 @@ const Canvas = () => {
     }
 
     //отрисовка
-    context.fillStyle = "green";
+    /* context.fillStyle = "green";
     context.fillRect(0, 0, 100, 100);
-    context.strokeRect(100, 100, 80, 50);
-  }, []); //пустой массив, чтобы посмотреть что эффект выполяется всего раз после первого рендеринга
+    context.strokeRect(100, 100, 80, 50); */
+    draw(context);
+    /*
+    let yPos: number = 100;
+    let bottomOfRect: number = yPos + 100;
+    let scren: number = 64 * 9;
+    const animate = () => {
+      window.requestAnimationFrame(animate);
+      context.fillStyle = "brown";
+      context.fillRect(0, 0, 64 * 16, 64 * 9);
 
-  return <canvas ref={canvasRef} />;
+      context.fillStyle = "red";
+      context.fillRect(100, yPos, 100, 100);
+
+      if (bottomOfRect <= scren) {
+        yPos++;
+        bottomOfRect = yPos + 100;
+      }
+    };
+    animate();*/
+  }, [draw]); //пустой массив, чтобы посмотреть что эффект выполяется всего раз после первого рендеринга
+
+  return <canvas ref={canvasRef} width={props.width} height={props.height} />;
 };
 
 export default Canvas;
